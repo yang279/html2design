@@ -8,4 +8,5 @@
 @import url('./mode-switcher/mode-switcher.css');
 @import url('./sidebar/sidebar.css');
 @import url('./annotation/annotation.css');
+@import url('./annotation-popup/annotation-popup.css');
 @import url('./code-inspector/code-inspector.css');

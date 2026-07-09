@@ -7,7 +7,7 @@
 <style>
 * { margin: 0; padding: 0; box-sizing: border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif; background: #f5f5f5; color: #333; }
-.app { max-width: 414px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; width: 100%; position: relative; }
+.app { max-width: 414px; margin: 0 auto; min-height: 100vh; display: flex; flex-direction: column; width: 100%; position: relative; overflow: visible; }
 
 .header { background: #fff; padding: 12px 16px; display: flex; align-items: center; justify-content: space-between; position: sticky; top: 0; z-index: 100; border-bottom: 1px solid #eee; }
 .account-select { display: flex; align-items: center; gap: 6px; }
@@ -69,11 +69,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helv
 .ann-marker { position: absolute; width: 24px; height: 24px; background: #ff6900; border-radius: 50% 50% 50% 0; transform: rotate(-45deg); cursor: pointer; z-index: 9999; display: flex; align-items: center; justify-content: center; font-size: 11px; font-weight: 700; color: #fff; transition: transform 0.2s, box-shadow 0.2s; }
 .ann-marker:hover { transform: rotate(-45deg) scale(1.2); box-shadow: 0 3px 12px rgba(255,105,0,0.5); }
 .ann-marker .ann-num { transform: rotate(45deg); }
-.ann-popup { position: absolute; background: #fff; border-radius: 12px; padding: 14px; width: 240px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); z-index: 10000; font-size: 13px; display: none; top: 0; left: 100%; margin-left: 8px; }
-.ann-popup.visible { display: block; }
-.ann-popup-author { color: #ff6900; font-weight: 600; font-size: 14px; }
-.ann-popup-time { color: #999; font-size: 12px; margin-top: 4px; }
-.ann-popup-content { color: #333; margin-top: 10px; line-height: 1.6; }
 
 @media (min-width: 415px) {
   .app { max-width: 768px; }
@@ -227,7 +222,7 @@ window.__annotations = [
 ];
 
 function renderAnnotations(show) {
-  document.querySelectorAll('.ann-marker, .ann-popup').forEach(e => e.remove());
+  document.querySelectorAll('.ann-marker').forEach(e => e.remove());
   if (!show) return;
 
   window.__annotations.forEach(a => {
@@ -236,27 +231,52 @@ function renderAnnotations(show) {
 
     const marker = document.createElement('div');
     marker.className = 'ann-marker';
-    marker.style.top = '-12px';
-    marker.style.left = '-12px';
     marker.innerHTML = `<span class="ann-num">${a.id}</span>`;
+    
+    const targetRect = target.getBoundingClientRect();
+    const appRect = document.getElementById('appRoot').getBoundingClientRect();
+    marker.style.top = (targetRect.top - appRect.top - 12) + 'px';
+    marker.style.left = (targetRect.left - appRect.left - 12) + 'px';
 
-    const popup = document.createElement('div');
-    popup.className = 'ann-popup';
-    popup.innerHTML = `
-      <div class="ann-popup-author">${a.author}</div>
-      <div class="ann-popup-time">${a.time}</div>
-      <div class="ann-popup-content">${a.content}</div>
-    `;
-
-    marker.addEventListener('mouseenter', () => popup.classList.add('visible'));
-    marker.addEventListener('mouseleave', () => {
-      setTimeout(() => { if (!popup.matches(':hover')) popup.classList.remove('visible'); }, 150);
+    marker.addEventListener('mouseenter', () => {
+      const markerRect = marker.getBoundingClientRect();
+      let frameRect = { left: 0, top: 0 };
+      
+      try {
+        if (window.parent && window.parent.document) {
+          const frameEl = window.parent.document.getElementById('pageFrame');
+          if (frameEl) {
+            frameRect = frameEl.getBoundingClientRect();
+          }
+        }
+      } catch(e) {}
+      
+      const top = markerRect.top + frameRect.top + 24;
+      const left = markerRect.left + frameRect.left + 24;
+      
+      try {
+        window.parent.postMessage({
+          type: 'showAnnotationPopup',
+          payload: {
+            author: a.author,
+            time: a.time,
+            content: a.content,
+            top: top,
+            left: left
+          }
+        }, '*');
+      } catch(e) {}
     });
-    popup.addEventListener('mouseenter', () => popup.classList.add('visible'));
-    popup.addEventListener('mouseleave', () => popup.classList.remove('visible'));
+    
+    marker.addEventListener('mouseleave', () => {
+      try {
+        window.parent.postMessage({
+          type: 'hideAnnotationPopup'
+        }, '*');
+      } catch(e) {}
+    });
 
-    target.appendChild(marker);
-    target.appendChild(popup);
+    document.getElementById('appRoot').appendChild(marker);
   });
 }
 

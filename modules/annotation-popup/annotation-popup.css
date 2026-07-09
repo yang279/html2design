@@ -1,0 +1,4 @@
+.annotation-popup { position: fixed; background: #fff; border-radius: 12px; padding: 14px; width: 240px; box-shadow: 0 6px 20px rgba(0,0,0,0.18); z-index: 10000; font-size: 13px; }
+.annotation-popup-author { color: #ff6900; font-weight: 600; font-size: 14px; }
+.annotation-popup-time { color: #999; font-size: 12px; margin-top: 4px; }
+.annotation-popup-content { color: #333; margin-top: 10px; line-height: 1.6; }

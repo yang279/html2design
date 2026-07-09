@@ -6,6 +6,7 @@ import { initViewportZoom } from './modules/viewport-zoom/viewport-zoom.js';
 import { initDevicePreset } from './modules/device-preset/device-preset.js';
 import { initSidebar } from './modules/sidebar/sidebar.js';
 import { initModeSwitcher, applyMode } from './modules/mode-switcher/mode-switcher.js';
+import './modules/annotation-popup/annotation-popup.js';
 
 initViewport();
 initViewportSize();
