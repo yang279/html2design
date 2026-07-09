@@ -1,0 +1,6 @@
+.annotation-card { margin-bottom: 12px; padding: 10px; background: rgba(0,0,0,0.04); border-radius: 8px; }
+.annotation-header { display: flex; justify-content: space-between; align-items: center; }
+.annotation-id { color: #ff6900; font-weight: 600; font-size: 13px; }
+.annotation-author { color: #999; font-size: 12px; }
+.annotation-time { color: #999; font-size: 12px; margin-top: 2px; }
+.annotation-content { color: #333; font-size: 13px; margin-top: 6px; line-height: 1.5; }

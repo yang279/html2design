@@ -5,24 +5,25 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>页面分析器</title>
 <link rel="stylesheet" href="index.css">
+<link rel="stylesheet" href="modules/styles.css">
 </head>
 <body>
 
 <div class="nav-bar">
   <div class="nav-logo">PageScope</div>
   <input class="url-input" id="urlInput" type="text" placeholder="输入URL，如 http://localhost:8080/mijia.html" value="http://localhost:8080/mijia.html">
-  <button class="load-btn" onclick="loadPage()">加载</button>
+  <button class="load-btn" id="loadBtn">加载</button>
   <div class="nav-links">
-    <a onclick="loadQuick('http://localhost:8080/mijia.html')">米家</a>
-    <a onclick="loadQuick('https://example.com')">Example</a>
+    <a data-url="http://localhost:8080/mijia.html">米家</a>
+    <a data-url="https://example.com">Example</a>
   </div>
 </div>
 
 <div class="main" id="mainArea">
   <div class="mode-bar">
-    <button class="mode-btn active" data-mode="interact" onclick="switchMode(this)">原型交互</button>
-    <button class="mode-btn" data-mode="annotation" onclick="switchMode(this)">标注模式</button>
-    <button class="mode-btn" data-mode="code" onclick="switchMode(this)">代码推荐</button>
+    <button class="mode-btn active" data-mode="interact">原型交互</button>
+    <button class="mode-btn" data-mode="annotation">标注模式</button>
+    <button class="mode-btn" data-mode="code">代码推荐</button>
   </div>
 
   <div class="iframe-wrap" id="iframeWrap">
@@ -32,7 +33,7 @@
   <div id="selectedOverlay" class="selected-overlay" style="display:none;"></div>
 
   <div class="sidebar" id="sidebar">
-    <div class="sidebar-toggle" onclick="toggleSidebar()">◀</div>
+    <div class="sidebar-toggle">◀</div>
     <div class="sidebar-title" id="sidebarTitle">页面基础信息</div>
     <div id="sidebarContent">
       <div class="empty-tip"><span>📄</span>等待页面加载...</div>
@@ -40,6 +41,6 @@
   </div>
 </div>
 
-<script src="index.js"></script>
+<script type="module" src="index.js"></script>
 </body>
 </html>
