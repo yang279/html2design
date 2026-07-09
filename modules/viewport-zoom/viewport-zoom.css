@@ -1,0 +1,2 @@
+.zoom-select { height: 30px; border: 1px solid #ddd; background: #fff; border-radius: 6px; font-size: 12px; color: #333; padding: 0 6px; cursor: pointer; outline: none; }
+.zoom-select:hover { border-color: #ff6900; }

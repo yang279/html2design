@@ -2,7 +2,7 @@ export const frame = document.getElementById('pageFrame');
 export const sidebarContent = document.getElementById('sidebarContent');
 export const sidebarTitle = document.getElementById('sidebarTitle');
 
-let currentMode = 'interact';
+let currentMode = 'annotation';
 let iframeDoc = null;
 
 export function getCurrentMode() {

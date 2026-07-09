@@ -1,5 +1,6 @@
 .sidebar { position: absolute; right: 0; top: 0; width: 280px; height: 100%; background: rgba(255,255,255,0.97); border-left: 1px solid #e0e0e0; padding: 16px; overflow-y: auto; z-index: 10; transition: width 0.3s; backdrop-filter: blur(6px); }
 .sidebar.collapsed { width: 0; padding: 0; border: none; overflow: hidden; }
+.sidebar.mode-hidden { display: none; }
 .sidebar-toggle { position: absolute; left: -32px; top: 50%; transform: translateY(-50%); width: 32px; height: 48px; background: rgba(255,255,255,0.97); border: 1px solid #e0e0e0; border-right: none; border-radius: 8px 0 0 8px; cursor: pointer; font-size: 16px; display: flex; align-items: center; justify-content: center; color: #666; backdrop-filter: blur(6px); z-index: 11; }
 .sidebar-toggle:hover { color: #ff6900; }
 .sidebar-title { font-size: 15px; font-weight: 600; color: #333; margin-bottom: 16px; padding-bottom: 12px; border-bottom: 1px solid #eee; }

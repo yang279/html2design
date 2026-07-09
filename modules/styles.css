@@ -1,6 +1,11 @@
 @import url('./nav/nav.css');
+@import url('./device-preset/device-preset.css');
+@import url('./viewport/viewport.css');
+@import url('./viewport-size/viewport-size.css');
+@import url('./viewport-zoom/viewport-zoom.css');
+@import url('./share/share.css');
+@import url('./download/download.css');
 @import url('./mode-switcher/mode-switcher.css');
 @import url('./sidebar/sidebar.css');
-@import url('./info-panel/info-panel.css');
 @import url('./annotation/annotation.css');
 @import url('./code-inspector/code-inspector.css');
