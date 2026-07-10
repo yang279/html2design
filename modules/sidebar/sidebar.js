@@ -14,9 +14,21 @@ export function initSidebar() {
   
   window.addEventListener('message', (e) => {
     if (e.data.type === 'pageChanged') {
+      switchToCurrentPageTab();
       renderAnnotationsList(e.data.payload.currentPage);
     }
   });
+}
+
+function switchToCurrentPageTab() {
+  const tabs = document.querySelectorAll('.sidebar-tab');
+  tabs.forEach(t => t.classList.remove('active'));
+  
+  const currentTabBtn = document.querySelector('.sidebar-tab[data-tab="current"]');
+  if (currentTabBtn) {
+    currentTabBtn.classList.add('active');
+    currentTab = 'current';
+  }
 }
 
 function initTabs() {
