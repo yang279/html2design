@@ -192,11 +192,15 @@ function openDetail(idx) {
   document.getElementById('detailParams').innerHTML = d.params.map(p => `
     <div class="param-row"><span class="param-label">${p.l}</span><span class="param-value">${p.v}</span></div>
   `).join('');
+  
+  notifyPageChanged();
 }
 
 function goBack() {
   document.getElementById('pageDetail').classList.remove('show');
   document.getElementById('pageHome').classList.remove('hide');
+  
+  notifyPageChanged();
 }
 
 function unbindDevice() {
@@ -215,17 +219,32 @@ function switchNav(el) {
   el.classList.add('active');
 }
 
-window.__annotations = [
-  { id: 1, target: '.device-card[data-idx="0"]', author: '张三', time: '2026-06-28 10:30', content: '智能灯泡卡片：开关按钮位置偏右，建议与图标左对齐，减少误触' },
-  { id: 2, target: '.device-card[data-idx="2"]', author: '李四', time: '2026-06-29 14:15', content: '摄像头设备名称文字过小，建议字号增大到15px，提升可读性' },
-  { id: 3, target: '.nav-item:nth-child(2)', author: '王五', time: '2026-07-02 08:10', content: '智能导航图标建议使用SVG替代emoji，视觉一致性更好' },
-];
+function getCurrentPage() {
+  const pageHome = document.getElementById('pageHome');
+  const pageDetail = document.getElementById('pageDetail');
+  
+  if (pageDetail && pageDetail.classList.contains('show')) {
+    return 'detail';
+  }
+  return 'home';
+}
+
+function notifyPageChanged() {
+  try {
+    window.parent.postMessage({
+      type: 'pageChanged',
+      payload: {
+        currentPage: getCurrentPage()
+      }
+    }, '*');
+  } catch(e) {}
+}
 
 function renderAnnotations(show) {
   document.querySelectorAll('.ann-marker').forEach(e => e.remove());
-  if (!show) return;
+  if (!show || !window.__currentAnnotations) return;
 
-  window.__annotations.forEach(a => {
+  window.__currentAnnotations.forEach(a => {
     const target = document.querySelector(a.target);
     if (!target) return;
 
@@ -281,7 +300,6 @@ function renderAnnotations(show) {
 }
 
 renderDevices('全屋');
-renderAnnotations(true);
 </script>
 </body>
 </html>

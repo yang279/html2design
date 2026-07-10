@@ -1,0 +1,50 @@
+{
+  "annotations": {
+    "home": [
+      {
+        "id": 1,
+        "target": ".device-card[data-idx=\"0\"]",
+        "author": "张三",
+        "time": "2026-06-28 10:30",
+        "content": "智能灯泡卡片：开关按钮位置偏右，建议与图标左对齐，减少误触"
+      },
+      {
+        "id": 2,
+        "target": ".device-card[data-idx=\"2\"]",
+        "author": "李四",
+        "time": "2026-06-29 14:15",
+        "content": "摄像头设备名称文字过小，建议字号增大到15px，提升可读性"
+      },
+      {
+        "id": 3,
+        "target": ".nav-item:nth-child(2)",
+        "author": "王五",
+        "time": "2026-07-02 08:10",
+        "content": "智能导航图标建议使用SVG替代emoji，视觉一致性更好"
+      }
+    ],
+    "detail": [
+      {
+        "id": 4,
+        "target": ".detail-header",
+        "author": "张三",
+        "time": "2026-07-03 09:20",
+        "content": "详情页头部返回按钮样式需优化，建议增加圆形背景，提升点击感知"
+      },
+      {
+        "id": 5,
+        "target": ".detail-params",
+        "author": "李四",
+        "time": "2026-07-03 11:45",
+        "content": "参数列表行间距过小，建议增加到16px，提升视觉层次感"
+      },
+      {
+        "id": 6,
+        "target": ".detail-unbind",
+        "author": "王五",
+        "time": "2026-07-04 14:30",
+        "content": "解绑按钮颜色过于醒目，建议使用灰色系，降低误操作风险"
+      }
+    ]
+  }
+}
