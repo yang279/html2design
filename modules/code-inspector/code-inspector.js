@@ -60,6 +60,8 @@ function codeClickHandler(e) {
   showCodeInfo(el);
 }
 
+let currentCodeTab = 'js';
+
 function showCodeInfo(el) {
   const iframeDoc = getIframeDoc();
   const computedStyle = iframeDoc.defaultView.getComputedStyle(el);
@@ -68,43 +70,56 @@ function showCodeInfo(el) {
   const classAttr = el.className ? '.' + el.className.toString().trim().split(/\s+/).join('.') : '';
   const selector = tagName + idAttr + classAttr;
 
-  let styles = '';
+  let cssContent = '';
+  cssContent += `<div class="info-section" style="margin-bottom:12px;"><div class="info-section-title">元素选择器</div><div class="selector-box" onclick="copyToClipboard(this.innerText)" style="cursor:pointer;" title="点击复制">${selector}</div></div>`;
+  
   const importantProps = ['display','flex-direction','justify-content','align-items','width','height','padding','margin','background','color','font-size','font-weight','border-radius','border','gap','position','overflow','z-index','flex','grid-template-columns'];
+  let styles = '';
   importantProps.forEach(p => {
     const v = computedStyle.getPropertyValue(p);
-    if (v) styles += `<span class="hl-prop">${p}</span>: <span class="hl-val">${v}</span>;\n`;
+    if (v) styles += `${p}: ${v};\n`;
   });
+  cssContent += `<div class="info-section"><div class="info-section-title">Computed Styles</div><div class="code-block" onclick="copyToClipboard(this.innerText)" style="cursor:pointer;" title="点击复制">${styles}</div></div>`;
+  
+  sidebarContent.innerHTML = `
+    <div class="code-card">
+      <div class="code-card-header">
+        <div class="code-card-title">代码推荐</div>
+        <div class="code-card-actions">
+          <button class="code-action-btn" onclick="exportCode()">导出</button>
+          <button class="code-action-btn" onclick="copyCode()">传送文本</button>
+        </div>
+      </div>
+      <div class="code-content">${cssContent}</div>
+    </div>
+    <div id="toast" class="toast" style="display:none;">复制成功</div>
+  `;
+  
+  window.currentCssContent = styles;
+}
 
-  let html = '';
-  const inlineStyles = el.getAttribute('style');
-  if (inlineStyles) {
-    html += `<div class="info-section"><div class="info-section-title">Inline Style</div><div class="code-block">${inlineStyles}</div></div>`;
-  }
-
-  html += `<div class="info-section"><div class="info-section-title">Computed Styles</div><div class="code-block">${styles}</div></div>`;
-
-  html += `<div class="info-section"><div class="info-section-title">元素选择器</div><div class="selector-box">${selector}</div></div>`;
-
-  html += `<div class="info-section"><div class="info-section-title">DOM 属性</div>`;
-  const attrs = Array.from(el.attributes).filter(a => a.name !== 'style' && a.name !== 'class' && a.name !== 'id');
-  attrs.forEach(a => {
-    html += `<div class="info-row"><span class="info-label">${a.name}</span><span class="info-value">${a.value.slice(0, 80)}</span></div>`;
+window.copyToClipboard = function(text) {
+  navigator.clipboard.writeText(text).then(() => {
+    showToast('复制成功');
+  }).catch(err => {
+    console.error('复制失败:', err);
   });
-  html += '</div>';
+};
 
-  const events = getEventHandlers(el);
-  if (events.length) {
-    html += `<div class="info-section"><div class="info-section-title">相关 JS 代码</div><div class="code-block">`;
-    events.forEach(ev => {
-      const code = ev.handler.toString().slice(0, 300);
-      html += `<span class="hl-comment">// ${ev.type} 事件</span>\n<span class="hl-func">${code}</span>\n\n`;
-    });
-    html += '</div></div>';
-  }
-
-  html += `<div class="info-section"><div class="info-section-title">元素文本</div><div class="text-preview">${(el.innerText || '').slice(0, 200).replace(/</g,'&lt;')}</div></div>`;
-
-  sidebarContent.innerHTML = html;
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  if (!toast) return;
+  
+  toast.textContent = message;
+  toast.style.display = 'block';
+  toast.style.opacity = '1';
+  
+  setTimeout(() => {
+    toast.style.opacity = '0';
+    setTimeout(() => {
+      toast.style.display = 'none';
+    }, 300);
+  }, 2000);
 }
 
 function getEventHandlers(el) {
@@ -131,3 +146,24 @@ function clearHighlight() {
   const overlay = document.getElementById('selectedOverlay');
   overlay.style.display = 'none';
 }
+
+window.exportCode = function() {
+  const content = window.currentJsContent || '';
+  const blob = new Blob([content.replace(/<[^>]+>/g, '')], { type: 'text/plain' });
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url;
+  a.download = 'code-export.txt';
+  a.click();
+  URL.revokeObjectURL(url);
+};
+
+window.copyCode = function() {
+  const content = window.currentJsContent || '';
+  const text = content.replace(/<[^>]+>/g, '');
+  navigator.clipboard.writeText(text).then(() => {
+    alert('已复制到剪贴板');
+  }).catch(err => {
+    console.error('复制失败:', err);
+  });
+};
