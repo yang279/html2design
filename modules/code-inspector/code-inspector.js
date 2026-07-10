@@ -28,12 +28,26 @@ function codeHoverHandler(e) {
 
   const overlay = document.getElementById('selectedOverlay');
   const elRect = el.getBoundingClientRect();
+  
+  const iframe = document.getElementById('pageFrame');
+  const iframeRect = iframe.getBoundingClientRect();
+  
+  const mainArea = document.getElementById('mainArea');
+  const mainRect = mainArea.getBoundingClientRect();
+  
+  const deviceFrame = document.getElementById('deviceFrame');
+  const zoom = deviceFrame ? parseFloat(deviceFrame.style.transform.replace('scale(', '').replace(')', '')) || 1 : 1;
+  
+  const left = (iframeRect.left - mainRect.left) + (elRect.left / zoom);
+  const top = (iframeRect.top - mainRect.top) + (elRect.top / zoom);
+  const width = elRect.width / zoom;
+  const height = elRect.height / zoom;
 
   overlay.style.display = 'block';
-  overlay.style.left = elRect.left + 'px';
-  overlay.style.top = elRect.top + 'px';
-  overlay.style.width = elRect.width + 'px';
-  overlay.style.height = elRect.height + 'px';
+  overlay.style.left = left + 'px';
+  overlay.style.top = top + 'px';
+  overlay.style.width = width + 'px';
+  overlay.style.height = height + 'px';
 }
 
 function codeClickHandler(e) {
